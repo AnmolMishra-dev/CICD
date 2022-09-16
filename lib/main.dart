@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -47,6 +47,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -75,6 +76,14 @@ class _MyHomePageState extends State<MyHomePage> {
       var assets = jsonResponse[0]['assets']  as List< dynamic>;
       var a=assets[0]["browser_download_url"];
 
+      launchURL() async {
+      var url = a.toString();
+        if (await canLaunch(url)) {
+          await launch(url);
+        } else {
+          throw 'Could not launch $url';
+        }
+      }
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String stringValue = prefs.getString('stringValue')!;
@@ -90,9 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
             content:  Text("Update Version :${tag_name[1]}",style: TextStyle(color: Colors.black),),
             actions: <Widget>[
               TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
+                onPressed:()=>launchURL(),
                 child: Container(
                   color: Colors.white,
                   padding: const EdgeInsets.all(14),

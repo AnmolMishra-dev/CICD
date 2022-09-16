@@ -74,8 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
     jsonDecode(response.body) as List< dynamic>;
       String Version = jsonResponse[0]['tag_name'];
       var assets = jsonResponse[0]['assets']  as List< dynamic>;
-      var a=assets[0]["browser_download_url"];
-
+      var a=assets[1]["browser_download_url"];
+      var Nameapk=assets[1]["name"];
+      print(Nameapk);
       launchURL() async {
       var url = a.toString();
         if (await canLaunch(url)) {
